@@ -4,3 +4,9 @@ A script that uses OpenCV to identify colors in a Raspberry Pi camera feed. The 
 The relative position of the centriod from the center of the camera feed is saved and displayed on the screen.
 
 You can also cycle modes to view the raw, thresholding, and thresholding w/ contours feed.
+
+Install required dependencies:
+`pip3 install picamera numpy opencv-python`
+
+To run:
+`python3 display.py`
