@@ -56,9 +56,6 @@ def process_image(raw_image,control):
   values = [bgr[0], bgr[1], bgr[2]]
   lower = np.array(setBounds(values[:], -threshold), dtype="uint8")
   upper = np.array(setBounds(values[:], threshold), dtype="uint8")
-  # print(values)
-  # print("Lower: " + np.array2string(lower))
-  # print("Upper: " + np.array2string(upper))
 
   text.append("with Threshold...%s"%colorText)
   images.append(cv2.inRange(images[-1], lower, upper))
@@ -83,31 +80,24 @@ def process_image(raw_image,control):
       best_cnt = cnt
 
   # Find the centroid of the best_cnt and draw a circle there
-  # Modify this code so that you can find the position relative to the center (Left - Negative, Right - Positive)
   M = cv2.moments(best_cnt)
   cx,cy = int(M['m10']/M['m00']), int(M['m01']/M['m00'])
   
-  # Coodinate for storing the relative distance of the circle from the center (Left = Negative, Right = Positive)
+  # Coodinate for storing the relative distance of the circle from the center 
+  # Left => Negative (-)
+  # Right => Positive (+)
+  # Bottom => Negative (-)
+  # Top => Positive (+)
   distance = -1
-  # print("text:" + str(text))
   if cx != 0 and cy != 0:
-      # print(cx, cy)
+      # If you're using a different resolution, change 320 & 240 to your new
+      # resolution divided by 2 [e.g (1024, 768) => 512 & 384]
       distance = (cx-320, 240-cy)
       text[0] = text[0] + " " * 32 + "Distance: (" + str(distance[0]) + ", " + str(distance[1]) + ")"
-  # Consider making function to fetch this value (in case the value is changed in the future)
-  # Camera resolution: (640, 480) => Center should be (320, 240)
-  # X increases from left to right and Y increases from bottom to
-  
-  # Draws a circle in the center of the scren (testing)
-  cv2.circle(raw_image,(320,240),8,(0,0,0),-1)
-  
         
   if max_area>0:
     cv2.circle(raw_image,(cx,cy),8,(setBounds(values[:], threshold)),-1)
     cv2.circle(raw_image,(cx,cy),4,(setBounds(values[:], threshold)),-1)
-    # Draws two circles that mark the x and y coordinate respectively
-    cv2.circle(raw_image, (cx,240),8,(255,0,0),-1)
-    cv2.circle(raw_image, (320,cy),8,(0,0,255),-1)
 
   return(images,text)
 #End
